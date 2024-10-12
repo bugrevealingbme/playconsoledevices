@@ -1,28 +1,37 @@
 // Tabloyu seçin
 const table = document.querySelector('.ess-table-canvas');
 
-// Satırları seçin
-const rows = table.querySelectorAll('.particle-table-row');
+// Eğer tablo mevcutsa satırları seçin
+if (table) {
+    const rows = table.querySelectorAll('.particle-table-row');
 
-// Boş bir dizi oluşturun
-const data = [];
+    // Boş bir dizi oluşturun
+    const data = [];
 
-// Her satır için verileri alın
-rows.forEach(row => {
-    const cells = row.querySelectorAll('ess-cell');
-    const rowData = {};
+    // Her satır için verileri alın
+    rows.forEach(row => {
+        const rowData = {};
 
-    rowData.device = cells[0].querySelector('div.line').textContent.trim();
-    rowData.marketName = cells[2].querySelector('text-field').textContent.trim();
-    rowData.androidVersions = cells[3].querySelector('text-field').textContent.trim();
-    rowData.ram = cells[4].querySelector('text-field').textContent.trim();
-    rowData.soc = cells[5].querySelector('text-field').textContent.trim();
+        // Hücreleri sırayla alın
+        const deviceCell = row.querySelector('ess-cell[essfield="model"] .line');
+        const marketNameCell = row.querySelector('ess-cell[essfield="marketing"] text-field');
+        const ramCell = row.querySelector('ess-cell[essfield="ram"] text-field');
+        const androidVersionsCell = row.querySelector('ess-cell[essfield="sdk"] text-field');
+        const imageCell = row.querySelector('.image-container img');
 
-    // Resim linkini alın
-    rowData.imageSrc = row.querySelector('.image-container._ngcontent-ogt-38 img').getAttribute('src');
+        // Hücrelerin içeriğini kontrol ederek doldurun
+        if (deviceCell) rowData.device = deviceCell.textContent.trim();
+        if (marketNameCell) rowData.marketName = marketNameCell.textContent.trim();
+        if (ramCell) rowData.ram = ramCell.textContent.trim();
+        if (androidVersionsCell) rowData.androidVersions = androidVersionsCell.textContent.trim();
+        if (imageCell) rowData.imageSrc = imageCell.getAttribute('src');
 
-    data.push(rowData);
-});
+        // Her bir satırı data dizisine ekleyin
+        data.push(rowData);
+    });
 
-// Elde edilen verileri konsola yazdırın
-console.log(JSON.stringify(data, null, 2));
+    // Elde edilen verileri konsola yazdırın
+    console.log(JSON.stringify(data, null, 2));
+} else {
+    console.error('Tablo bulunamadı.');
+}
